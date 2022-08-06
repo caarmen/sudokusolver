@@ -23,6 +23,29 @@ class Board:
             else:
                 self.data[row][col] = None
 
+    def get_row(self, position: int) -> numpy.ndarray:
+        """
+        :return: the values of the row at the given position
+        """
+        return self.data[position : position + 1, 0:9].flatten()
+
+    def get_col(self, position: int) -> numpy.ndarray:
+        """
+        :return: the values of the column at the given position
+        """
+        return self.data[0:9, position : position + 1].flatten()
+
+    def get_square(self, row: int, col: int) -> numpy.ndarray:
+        """
+        :return: the values of the square at the given position
+        """
+        square_begin_row = row - row % 3
+        square_begin_col = col - col % 3
+        return self.data[
+            square_begin_row : square_begin_row + 3,
+            square_begin_col : square_begin_col + 3,
+        ].flatten()
+
     def to_ss(self) -> str:
         """
         :return: the sudoko formatted in the ss format, like this:

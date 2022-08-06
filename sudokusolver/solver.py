@@ -54,20 +54,17 @@ def get_state(board: Board) -> State:
     """
     # check the rows and columns
     for i in range(9):
-        row = board.data[i : i + 1, 0:9].flatten()
-        state_row = _get_state(row)
+        state_row = _get_state(board.get_row(i))
         if state_row != State.VALID:
             return state_row
 
-        col = board.data[0:9, i : i + 1].flatten()
-        state_col = _get_state(col)
+        state_col = _get_state(board.get_col(i))
         if state_col != State.VALID:
             return state_col
 
     # check the squares
     for i, j in product(range(0, 9, 3), range(0, 9, 3)):
-        square = board.data[i : i + 3, j : j + 3].flatten()
-        state_square = _get_state(square)
+        state_square = _get_state(board.get_square(i, j))
         if state_square != State.VALID:
             return state_square
     return State.VALID
@@ -78,16 +75,9 @@ def _get_possible_numbers_for_cell(board: Board, cell: Cell) -> List[int]:
     :return: the possible numbers for the cell
     based on the numbers in the other cells of its row, column, and square
     """
-    numbers_in_row = set(board.data[cell.row : cell.row + 1, 0:9].flatten())
-    numbers_in_col = set(board.data[0:9, cell.col : cell.col + 1].flatten())
-    square_begin_row = cell.row - cell.row % 3
-    square_begin_col = cell.col - cell.col % 3
-    numbers_in_square = set(
-        board.data[
-            square_begin_row : square_begin_row + 3,
-            square_begin_col : square_begin_col + 3,
-        ].flatten()
-    )
+    numbers_in_row = set(board.get_row(cell.row))
+    numbers_in_col = set(board.get_col(cell.col))
+    numbers_in_square = set(board.get_square(cell.row, cell.col))
     used_numbers = _remove_none(
         numbers_in_row.union(numbers_in_col).union(numbers_in_square)
     )
