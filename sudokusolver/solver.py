@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from enum import Enum
 from itertools import product
 from typing import List, Optional
+import numpy
 from sudokusolver.board import Board
 
 
@@ -37,7 +38,7 @@ def _remove_none(data: set) -> set:
     return {item for item in data if item is not None}
 
 
-def _get_state(items: List) -> State:
+def _get_state(items: numpy.ndarray) -> State:
     non_none_items = [item for item in items if item is not None]
     if len(set(non_none_items)) != len(non_none_items):
         return State.HAS_DUPLICATES
@@ -70,7 +71,7 @@ def get_state(board: Board) -> State:
     return State.VALID
 
 
-def _get_possible_numbers_for_cell(board: Board, cell: Cell) -> List[int]:
+def _get_possible_numbers_for_cell(board: Board, cell: Cell) -> List[str]:
     """
     :return: the possible numbers for the cell
     based on the numbers in the other cells of its row, column, and square
@@ -84,7 +85,7 @@ def _get_possible_numbers_for_cell(board: Board, cell: Cell) -> List[int]:
     return sorted(full_group.difference(used_numbers))
 
 
-def _calculate_number_for_cell(board: Board, cell: Cell) -> Optional[chr]:
+def _calculate_number_for_cell(board: Board, cell: Cell) -> Optional[str]:
     """
     :return: the number for the cell if there's only one possible number it may have,
     based on the numbers in the other cells of its row, column, and square
