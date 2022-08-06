@@ -23,38 +23,6 @@ class Board:
             else:
                 self.data[row][col] = None
 
-    @property
-    def rows(self):
-        """
-        :return: the board represented as a collection of rows
-        """
-        # Our data is organized by rows already
-        return self.data
-
-    @property
-    def cols(self):
-        """
-        :return: the board represented as a collection of columns
-        """
-        return numpy.transpose(self.data)
-
-    @property
-    def squares(self):
-        """
-        :return: the board represented as a collection of inner squares
-        """
-        return [
-            self.data[0:3, 0:3].flatten(),
-            self.data[3:6, 0:3].flatten(),
-            self.data[6:9, 0:3].flatten(),
-            self.data[0:3, 3:6].flatten(),
-            self.data[3:6, 3:6].flatten(),
-            self.data[6:9, 3:6].flatten(),
-            self.data[0:3, 6:9].flatten(),
-            self.data[3:6, 6:9].flatten(),
-            self.data[6:9, 6:9].flatten(),
-        ]
-
     def to_ss(self) -> str:
         """
         :return: the sudoko formatted in the ss format, like this:

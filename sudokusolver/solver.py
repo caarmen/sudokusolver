@@ -52,18 +52,24 @@ def get_state(board: Board) -> State:
     """
     :return: the state of the board
     """
-    for row in board.rows:
-        state = _get_state(row)
-        if state != State.VALID:
-            return state
-    for col in board.cols:
-        state = _get_state(col)
-        if state != State.VALID:
-            return state
-    for square in board.squares:
-        state = _get_state(square)
-        if state != State.VALID:
-            return state
+    # check the rows and columns
+    for i in range(9):
+        row = board.data[i : i + 1, 0:9].flatten()
+        state_row = _get_state(row)
+        if state_row != State.VALID:
+            return state_row
+
+        col = board.data[0:9, i : i + 1].flatten()
+        state_col = _get_state(col)
+        if state_col != State.VALID:
+            return state_col
+
+    # check the squares
+    for i, j in product(range(0, 9, 3), range(0, 9, 3)):
+        square = board.data[i : i + 3, j : j + 3].flatten()
+        state_square = _get_state(square)
+        if state_square != State.VALID:
+            return state_square
     return State.VALID
 
 
