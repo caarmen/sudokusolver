@@ -1,4 +1,5 @@
-from sudokusolver.solver import Sudoku
+from sudokusolver.solver import solve, get_state, State
+from sudokusolver.board import Board
 
 
 def test_already_solved():
@@ -30,6 +31,24 @@ def test_few_initial_values_provided():
     """
     _test_sudoku("123456789000000000000000000000000000000000000000000000000000000000000000000000000")
 
+def test_invalid():
+    """
+    Test a sudoku which is already invalid
+    """
+    _test_sudoku_has_duplicates("123456789234567891345678912456789123567891234678912345789123456891234567912345678")
+
+def test_unsolvable1():
+    """
+    Test a sudoku which is isn't solvable
+    """
+    _test_sudoku_has_duplicates("110000000000000000000000000000000000000000000000000000000000000000000000000000000")
+
+def test_unsolvable2():
+    """
+    Test a sudoku which is isn't solvable
+    https://www.sudokudragon.com/unsolvable.htm
+    """
+    _test_incomplete_sudoku("516849732307605000809700065135060907472591006968370050253186074684207500791050608")
 
 # The following come from
 # http://forum.enjoysudoku.com/the-master-collection-sdm-format-t39722.html
@@ -156,6 +175,16 @@ def test_hard_10():
 
 
 def _test_sudoku(sdm: str):
-    sudoku = Sudoku(sdm)
-    sudoku.resolve_unambiguous_cells()
-    assert sudoku.is_valid()
+    board = Board(sdm)
+    board = solve(board)
+    assert get_state(board) == State.VALID
+
+def _test_sudoku_has_duplicates(sdm: str):
+    board = Board(sdm)
+    board = solve(board)
+    assert get_state(board) == State.HAS_DUPLICATES
+
+def _test_incomplete_sudoku(sdm: str):
+    board = Board(sdm)
+    board = solve(board)
+    assert get_state(board) == State.INCOMPLETE
