@@ -1,2 +1,2 @@
--r prod.txt
+-r dev.txt
 pytest==7.1.2
