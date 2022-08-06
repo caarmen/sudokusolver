@@ -2,6 +2,7 @@
 Represents a Sudoku board
 """
 from itertools import product
+from typing import Iterable
 
 import numpy
 
@@ -23,19 +24,19 @@ class Board:
             else:
                 self.data[row][col] = None
 
-    def get_row(self, position: int) -> numpy.ndarray:
+    def get_row(self, position: int) -> Iterable[str]:
         """
         :return: the values of the row at the given position
         """
         return self.data[position : position + 1, 0:9].flatten()
 
-    def get_col(self, position: int) -> numpy.ndarray:
+    def get_col(self, position: int) -> Iterable[str]:
         """
         :return: the values of the column at the given position
         """
         return self.data[0:9, position : position + 1].flatten()
 
-    def get_square(self, row: int, col: int) -> numpy.ndarray:
+    def get_square(self, row: int, col: int) -> Iterable[str]:
         """
         :return: the values of the square at the given position
         """

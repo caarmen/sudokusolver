@@ -5,8 +5,7 @@ from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
 from itertools import product
-from typing import List, Optional
-import numpy
+from typing import Iterable, List, Optional
 from sudokusolver.board import Board
 
 
@@ -38,7 +37,7 @@ def _remove_none(data: set) -> set:
     return {item for item in data if item is not None}
 
 
-def _get_state(items: numpy.ndarray) -> State:
+def _get_state(items: Iterable[str]) -> State:
     non_none_items = [item for item in items if item is not None]
     if len(set(non_none_items)) != len(non_none_items):
         return State.HAS_DUPLICATES
