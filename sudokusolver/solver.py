@@ -1,3 +1,6 @@
+"""
+A Sudoku board solver
+"""
 from copy import deepcopy
 from dataclasses import dataclass
 from enum import Enum
@@ -7,6 +10,10 @@ from sudokusolver.board import Board
 
 
 class State(str, Enum):
+    """
+    The state of a Board
+    """
+
     VALID = "valid"
     HAS_DUPLICATES = "has_duplicates"
     INCOMPLETE = "incomplete"
@@ -15,6 +22,10 @@ class State(str, Enum):
 
 @dataclass
 class Cell:
+    """
+    A position in the board
+    """
+
     row: int
     col: int
 
@@ -38,6 +49,9 @@ def _get_state(items: List) -> State:
 
 
 def get_state(board: Board) -> State:
+    """
+    :return: the state of the board
+    """
     for row in board.rows:
         state = _get_state(row)
         if state != State.VALID:
@@ -101,7 +115,8 @@ def _resolve_unambiguous_cells_one_pass(board: Board) -> bool:
 
 def _resolve_unambiguous_cells(board):
     """
-    In all the empty cells, look for cases where only one number is possible. Fill in all these cases.
+    In all the empty cells, look for cases where only one number is possible.
+    Fill in all these cases.
     Then repeat.
     Stop when a pass over the board didn't change anything.
     """
@@ -118,6 +133,10 @@ def _find_first_ambiguous_cell(board: Board) -> Optional[Cell]:
 
 
 def solve(board: Board) -> Board:
+    """
+    :return: the board in its solved state, or in an incomplete or invalid state if we
+    weren't able to solve it.
+    """
     cell = _find_first_ambiguous_cell(board)
     if not cell:
         return board
@@ -132,7 +151,7 @@ def solve(board: Board) -> Board:
         state = get_state(board)
         if state == State.VALID:
             return board
-        elif state == State.INCOMPLETE:
+        if state == State.INCOMPLETE:
             board = solve(board)
             if get_state(board) == State.VALID:
                 return board

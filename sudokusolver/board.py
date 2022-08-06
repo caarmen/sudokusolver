@@ -1,9 +1,16 @@
+"""
+Represents a Sudoku board
+"""
 from itertools import product
 
 import numpy
 
 
 class Board:
+    """
+    Represents a Sudoku board
+    """
+
     def __init__(self, sdm: str):
         self.iteration_count = 0
         if len(sdm) != 81:
@@ -18,15 +25,24 @@ class Board:
 
     @property
     def rows(self):
+        """
+        :return: the board represented as a collection of rows
+        """
         # Our data is organized by rows already
         return self.data
 
     @property
     def cols(self):
+        """
+        :return: the board represented as a collection of columns
+        """
         return numpy.transpose(self.data)
 
     @property
     def squares(self):
+        """
+        :return: the board represented as a collection of inner squares
+        """
         return [
             self.data[0:3, 0:3].flatten(),
             self.data[3:6, 0:3].flatten(),
