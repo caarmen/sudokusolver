@@ -348,6 +348,96 @@ def test_hard_10():
     )
 
 
+def test_diabolical_1():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "083020090000800100029300008000098700070000060006740000300006980002005000010030540"
+    )
+
+
+def test_diabolical_2():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "200050006010000090600801003007090600000703000900080002100000005060902010003060200"
+    )
+
+
+def test_diabolical_3():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "590000007040010083008034900001402000069000820000109300004670200980040030700000016"
+    )
+
+
+def test_diabolical_4():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "006000200900000004243000896000591000002080300400203001300000007000907000010408020"
+    )
+
+
+def test_diabolical_5():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "000000000560000032230040079000060000070501090000708000053000920009806500700000004"
+    )
+
+
+def test_diabolical_6():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "000310000060097040001420300030000502786000139502000060003059700020680010000074000"
+    )
+
+
+def test_diabolical_7():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "076009400000801007300000009610307080000090000020108034500000006900204000001600790"
+    )
+
+
+def test_diabolical_8():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "103070002000000040090005001020100503007000200405002060200800030050000000800020709"
+    )
+
+
+def test_diabolical_9():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "850000031000070000000809000003000600970301052000020000100407006205000307000080000"
+    )
+
+
+def test_diabolical_10():
+    """
+    Diabolical sudoku from the master sdm collection
+    """
+    _test_sudoku(
+        "031006009000040060008007300184070020000000000090020148005800400040060000300500780"
+    )
+
+
 def _test_sudoku(sdm: str):
     board = Board(sdm)
     board = solve(board)
