@@ -24,7 +24,8 @@ def test_no_guessing_needed():
 def test_guessing_needed():
     """
     After several iterations of finding unambiguous answers for some cells, we end up in a situation where
-    all the remaining empty cells cn have multiple values. We have to, at this point, take a guess and continue.
+    all the remaining empty cells have multiple possible values. We have to, at this point,
+    take a guess and continue.
     """
     _test_sudoku(
         "450109780027400013080627040805301200002095400314070000000000325030702194040503076"
@@ -40,7 +41,7 @@ def test_few_initial_values_provided():
     )
 
 
-def test_invalid():
+def test_has_duplicates1():
     """
     Test a sudoku which is already invalid
     """
@@ -49,7 +50,7 @@ def test_invalid():
     )
 
 
-def test_unsolvable1():
+def test_has_duplicates2():
     """
     Test a sudoku which is isn't solvable
     """

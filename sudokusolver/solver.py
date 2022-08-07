@@ -84,15 +84,6 @@ def _get_possible_numbers_for_cell(board: Board, cell: Cell) -> List[str]:
     return sorted(full_group.difference(used_numbers))
 
 
-def _calculate_number_for_cell(board: Board, cell: Cell) -> Optional[str]:
-    """
-    :return: the number for the cell if there's only one possible number it may have,
-    based on the numbers in the other cells of its row, column, and square
-    """
-    possible_numbers = _get_possible_numbers_for_cell(board, cell)
-    return possible_numbers.pop() if len(possible_numbers) == 1 else None
-
-
 def _resolve_unambiguous_cells_one_pass(board: Board) -> bool:
     """
     Traverses the board once, filling in any empty cells for which only
@@ -102,9 +93,11 @@ def _resolve_unambiguous_cells_one_pass(board: Board) -> bool:
     has_changed = False
     for row_index, col_index in product(range(9), range(9)):
         if not board.data[row_index][col_index]:
-            number = _calculate_number_for_cell(board, Cell(row_index, col_index))
-            if number:
-                board.data[row_index][col_index] = number
+            possible_numbers = _get_possible_numbers_for_cell(
+                board, Cell(row_index, col_index)
+            )
+            if len(possible_numbers) == 1:
+                board.data[row_index][col_index] = possible_numbers[0]
                 has_changed = True
     return has_changed
 
@@ -121,7 +114,7 @@ def _resolve_unambiguous_cells(board):
         should_try_again = _resolve_unambiguous_cells_one_pass(board)
 
 
-def _find_first_ambiguous_cell(board: Board) -> Optional[Cell]:
+def _find_first_empty_cell(board: Board) -> Optional[Cell]:
     for row, col in product(range(9), range(9)):
         if board.data[row][col] is None:
             return Cell(row, col)
@@ -133,22 +126,23 @@ def solve(board: Board) -> Board:
     :return: the board in its solved state, or in an incomplete or invalid state if we
     weren't able to solve it.
     """
-    cell = _find_first_ambiguous_cell(board)
+    cell = _find_first_empty_cell(board)
     if not cell:
         return board
     possible_numbers = _get_possible_numbers_for_cell(board, cell)
     if not possible_numbers:
         return board
-    snapshot = deepcopy(board)
     for number in possible_numbers:
-        board = deepcopy(snapshot)
-        board.data[cell.row][cell.col] = number
-        _resolve_unambiguous_cells(board)
-        state = get_state(board)
+        board_copy = deepcopy(board)
+        board_copy.data[cell.row][cell.col] = number
+        _resolve_unambiguous_cells(board_copy)
+        state = get_state(board_copy)
         if state == State.VALID:
-            return board
+            return board_copy
         if state == State.INCOMPLETE:
-            board = solve(board)
-            if get_state(board) == State.VALID:
-                return board
+            board_copy = solve(board_copy)
+            if get_state(board_copy) == State.VALID:
+                return board_copy
+        # else INVALID state.
+        # Maybe we'll have better luck with the next possible number
     return board
