@@ -11,10 +11,11 @@ The module reads sudoku strings in sdm format.
 ### Program
 Invoke the program as follows:
 ```bash
-python -m  sudokusolver 450109780027400013080627040805301200002095400314070000000000325030702194040503076
+python -m  sudokusolver --sdm 450109780027400013080627040805301200002095400314070000000000325030702194040503076
 ```
 This prints the following:
 ```
+450109780027400013080627040805301200002095400314070000000000325030702194040503076
 456|139|782
 927|458|613
 183|627|549
@@ -26,6 +27,11 @@ This prints the following:
 761|984|325
 538|762|194
 249|513|876
+```
+
+It's also possible to specify a file containing one sdm entry per line:
+```
+python -m sudokusolver --file /path/to/sudoku.sdm
 ```
 
 ### Package
