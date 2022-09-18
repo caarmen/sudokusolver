@@ -2,9 +2,7 @@
 Represents a Sudoku board
 """
 from itertools import product
-from typing import Iterable
-
-import numpy
+from typing import Iterable, List, Optional
 
 
 class Board:
@@ -16,7 +14,7 @@ class Board:
         self.iteration_count = 0
         if len(sdm) != 81:
             raise ValueError("Invalid sdm input")
-        self.data = numpy.zeros(81, dtype=object).reshape((9, 9))
+        self.data: List[List[Optional[str]]] = [9 * [None] for _ in range(9)]
         for row, col in product(range(9), range(9)):
             input_number = sdm[row * 9 + col]
             if 1 <= int(input_number) <= 9:
@@ -28,13 +26,13 @@ class Board:
         """
         :return: the values of the row at the given position
         """
-        return self.data[position : position + 1, 0:9].flatten()
+        return self.data[position]
 
     def get_col(self, position: int) -> Iterable[str]:
         """
         :return: the values of the column at the given position
         """
-        return self.data[0:9, position : position + 1].flatten()
+        return [row[position] for row in self.data]
 
     def get_square(self, row: int, col: int) -> Iterable[str]:
         """
@@ -42,10 +40,11 @@ class Board:
         """
         square_begin_row = row - row % 3
         square_begin_col = col - col % 3
-        return self.data[
-            square_begin_row : square_begin_row + 3,
-            square_begin_col : square_begin_col + 3,
-        ].flatten()
+        return [
+            self.data[square_begin_row + r][square_begin_col + c]
+            for r in range(3)
+            for c in range(3)
+        ]
 
     def to_ss(self) -> str:
         """
@@ -66,7 +65,7 @@ class Board:
         """
         result = ""
         for row, col in product(range(9), range(9)):
-            cell = self.data[row, col]
+            cell = self.data[row][col]
             result += cell if cell else "."
             if col in [2, 5]:
                 result += "|"
