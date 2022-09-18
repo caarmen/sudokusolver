@@ -126,23 +126,29 @@ def solve(board: Board) -> Board:
     :return: the board in its solved state, or in an incomplete or invalid state if we
     weren't able to solve it.
     """
-    cell = _find_first_empty_cell(board)
-    if not cell:
-        return board
-    possible_numbers = _get_possible_numbers_for_cell(board, cell)
-    if not possible_numbers:
-        return board
-    for number in possible_numbers:
-        board_copy = deepcopy(board)
-        board_copy.data[cell.row][cell.col] = number
-        _resolve_unambiguous_cells(board_copy)
-        state = get_state(board_copy)
-        if state == State.VALID:
-            return board_copy
-        if state == State.INCOMPLETE:
-            board_copy = solve(board_copy)
-            if get_state(board_copy) == State.VALID:
+    boards_stack: List[Board] = [board]
+    while boards_stack:
+        board_to_test = boards_stack.pop()
+
+        cell = _find_first_empty_cell(board_to_test)
+        if not cell:
+            continue
+
+        possible_numbers = _get_possible_numbers_for_cell(board_to_test, cell)
+        if not possible_numbers:
+            continue
+
+        for number in possible_numbers:
+            board_copy = deepcopy(board_to_test)
+            board_copy.data[cell.row][cell.col] = number
+            _resolve_unambiguous_cells(board_copy)
+            state = get_state(board_copy)
+            if state == State.VALID:
                 return board_copy
-        # else INVALID state.
-        # Maybe we'll have better luck with the next possible number
+            if state == State.INCOMPLETE:
+                boards_stack.append(board_copy)
+            # else INVALID state.
+            # Maybe we'll have better luck with the next possible number
+
+    # If we get here, this means we couldn't find a solution. Return the original board.
     return board
