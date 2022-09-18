@@ -7,6 +7,7 @@ from enum import Enum
 
 from sudokusolver import solver
 from sudokusolver.board import Board
+from sudokusolver.solver import Algorithm
 
 
 def run():
@@ -23,10 +24,10 @@ def run():
 
     if options.mode == _Mode.PARALLEL:
         with multiprocessing.Pool() as pool:
-            pool.map(_solve, sdms)
+            pool.starmap(_solve, [(sdm, options.algorithm) for sdm in sdms])
     else:
         for sdm in sdms:
-            _solve(sdm)
+            _solve(sdm, options.algorithm)
 
 
 class _Mode(Enum):
@@ -57,11 +58,19 @@ def _parse_args():
         help="Default %(default)s",
         nargs="?",
     )
+    parser.add_argument(
+        "--algorithm",
+        choices=list(Algorithm),
+        type=Algorithm,
+        default=Algorithm.RECURSIVE,
+        help="Default %(default)s",
+        nargs="?",
+    )
     return parser.parse_args()
 
 
-def _solve(sdm):
+def _solve(sdm: str, algorithm: Algorithm):
     board = Board(sdm)
-    solution = solver.solve(board)
+    solution = solver.solve(board, algorithm=algorithm)
     print(sdm)
     print(solution.to_ss())

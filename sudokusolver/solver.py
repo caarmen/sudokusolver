@@ -6,7 +6,20 @@ from dataclasses import dataclass
 from enum import Enum
 from itertools import product
 from typing import Iterable, List, Optional
+
 from sudokusolver.board import Board
+
+
+class Algorithm(str, Enum):
+    """
+    Algorithm to use when solving
+    """
+
+    RECURSIVE = "recursive"
+    ITERATIVE = "iterative"
+
+    def __str__(self):
+        return self.value
 
 
 class State(str, Enum):
@@ -121,11 +134,43 @@ def _find_first_empty_cell(board: Board) -> Optional[Cell]:
     return None
 
 
-def solve(board: Board) -> Board:
+def solve(board: Board, algorithm: Algorithm = Algorithm.RECURSIVE) -> Board:
     """
     :return: the board in its solved state, or in an incomplete or invalid state if we
     weren't able to solve it.
     """
+    if algorithm == Algorithm.RECURSIVE:
+        return _solve_recursive(board)
+    return _solve_iterative(board)
+
+
+def _solve_recursive(board: Board) -> Board:
+    cell = _find_first_empty_cell(board)
+    if not cell:
+        return board
+
+    possible_numbers = _get_possible_numbers_for_cell(board, cell)
+    if not possible_numbers:
+        return board
+
+    for number in possible_numbers:
+        board_copy = deepcopy(board)
+        board_copy.data[cell.row][cell.col] = number
+        _resolve_unambiguous_cells(board_copy)
+        state = get_state(board_copy)
+        if state == State.VALID:
+            return board_copy
+        if state == State.INCOMPLETE:
+            board_copy = solve(board_copy)
+        if get_state(board_copy) == State.VALID:
+            return board_copy
+        # else INVALID state.
+        # Maybe we'll have better luck with the next possible number
+
+    return board
+
+
+def _solve_iterative(board: Board) -> Board:
     boards_stack: List[Board] = [board]
     while boards_stack:
         board_to_test = boards_stack.pop()
