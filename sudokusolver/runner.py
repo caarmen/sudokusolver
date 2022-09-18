@@ -55,7 +55,7 @@ def _parse_args():
         choices=list(_Mode),
         type=_Mode,
         default=_Mode.PARALLEL,
-        help="Default %(default)s",
+        help="How to process multiple boards. Default %(default)s",
         nargs="?",
     )
     parser.add_argument(
